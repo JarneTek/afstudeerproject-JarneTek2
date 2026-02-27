@@ -56,3 +56,42 @@ export async function createClub(formData: FormData): Promise<{ error: string } 
     revalidatePath("/dashboard");
     redirect("/dashboard");
 }
+
+export async function updateClub(clubId: string, formData: FormData) {
+    const session = await getSession();
+    if (!session) return { error: "Not authenticated" };
+
+    const clubUser = await prisma.clubUser.findUnique({
+        where: {
+            userId_clubId: {
+                userId: session.id,
+                clubId,
+            },
+        },
+    });
+    if (!clubUser) return { error: "Not authorized" };
+
+    const parsed = createClubSchema.safeParse({
+        name: formData.get("name"),
+        primaryColor: formData.get("primaryColor"),
+        secondaryColor: formData.get("secondaryColor") || undefined,
+    });
+    if (!parsed.success) {
+        return { error: parsed.error.issues[0].message };
+    }
+
+    const slug = parsed.data.name.toLowerCase().replace(/\s+/g, "-");
+
+    await prisma.club.update({
+        where: { id: clubId },
+        data: {
+            name: parsed.data.name,
+            slug,
+            primaryColor: parsed.data.primaryColor,
+            secondaryColor: parsed.data.secondaryColor,
+        },
+    });
+
+    revalidatePath("/dashboard");
+    return { success: true };
+}

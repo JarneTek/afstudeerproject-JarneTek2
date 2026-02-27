@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { Form, FormItem, Product } from "@prisma/client";
 import AddArticleModal from "@/components/forms/AddArticleModal";
 import UpdateArticleModal from "@/components/forms/UpdateArticleModal";
+import DeleteFormItem from "@/components/forms/DeleteFormItem";
 
 type FormWithItems = Form & { items: (FormItem & { product: Product })[] };
 
@@ -73,9 +74,10 @@ export default function FormDetailPage() {
                         getFormWithItems(formId).then(setForm)
                       }
                     />
-                    <button className="text-gray-300 hover:text-red-400 text-lg leading-none transition-colors">
-                      ×
-                    </button>
+                    <DeleteFormItem
+                      formItemId={item.id}
+                      onDeleted={() => getFormWithItems(formId).then(setForm)}
+                    />
                   </div>
                 </div>
 

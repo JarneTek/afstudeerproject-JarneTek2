@@ -236,3 +236,41 @@ await prisma.product.update({
     revalidatePath(`/dashboard/form-builder/${formItem.formId}`);
     return updatedFormItem;
 }
+
+export async function deleteFormItem(formItemId: string) {
+    const session = await getSession();
+    const userId = session?.id;
+    if (!userId) return null;
+
+    const formItem = await prisma.formItem.findUnique({
+        where: { id: formItemId },
+        include: {
+            form: true,
+        },
+    });
+    if (!formItem) return null;
+
+    const product = await prisma.product.findUnique({
+        where: { id: formItem.productId },
+    });
+    if (!product) return null;
+
+    const clubUser = await prisma.clubUser.findUnique({
+        where: {
+            userId_clubId: {
+                userId,
+                clubId: formItem.form.clubId,
+            },
+        },
+    });
+    if (!clubUser) return null;
+
+    await prisma.formItem.delete({
+        where: { id: formItemId },
+    });
+    await prisma.product.delete({
+        where: { id: formItem.productId },
+    });
+    revalidatePath(`/dashboard/form-builder/${formItem.formId}`);
+    return true;
+}

@@ -8,6 +8,7 @@ type ClubContextType = {
   clubs: ClubEntry[];
   selectedClub: ClubEntry | null;
   setSelectedClub: (club: ClubEntry) => void;
+  refreshClubs: () => Promise<void>;
 };
 
 const ClubContext = createContext<ClubContextType | null>(null);
@@ -35,8 +36,21 @@ export default function ClubProvider({
     });
   }, [pathname]);
 
+  const refreshClubs = async () => {
+    const data = await getUserClubs();
+    setClubs(data as ClubEntry[]);
+    if (selectedClub) {
+      const updated = data.find((c) => c.clubId === selectedClub.clubId);
+      if (updated) setSelectedClub(updated as ClubEntry);
+    } else if (data.length > 0) {
+      setSelectedClub(data[0] as ClubEntry);
+    }
+  };
+
   return (
-    <ClubContext.Provider value={{ clubs, selectedClub, setSelectedClub }}>
+    <ClubContext.Provider
+      value={{ clubs, selectedClub, setSelectedClub, refreshClubs }}
+    >
       {children}
     </ClubContext.Provider>
   );

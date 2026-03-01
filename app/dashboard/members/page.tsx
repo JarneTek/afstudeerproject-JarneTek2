@@ -2,6 +2,7 @@
 
 import { useClub } from "@/providers/clubprovider";
 import { getClubMembers, toggleHasPaid } from "@/lib/actions/members";
+import ManualOrderPopUp from "@/components/members/ManualOrderPopUp";
 import { useState, useEffect } from "react";
 import { Member } from "@prisma/client";
 
@@ -123,9 +124,10 @@ export default function MembersPage() {
                       )}
                     </td>
                     <td className="px-4 py-3">
-                      <button className="border border-gray-200 text-gray-600 px-3 py-1 rounded-lg text-xs hover:bg-gray-50 transition-colors">
-                        Manual Order
-                      </button>
+                      <ManualOrderPopUp
+                        memberId={member.id}
+                        clubId={selectedClub.clubId}
+                      />
                     </td>
                   </tr>
                 ))}

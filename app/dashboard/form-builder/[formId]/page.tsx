@@ -36,7 +36,9 @@ export default function FormDetailPage() {
       <div className="w-80 flex-shrink-0 flex flex-col border-r border-gray-200 bg-white overflow-hidden">
         <div className="p-4 border-b border-gray-100">
           <h2 className="font-bold text-brand-navy text-sm">Form Articles</h2>
-          <p className="text-xs text-gray-400">Template: {form.targetGroup}</p>
+          <p className="text-xs text-gray-400">
+            Template: {form.targetGroups.join(", ")}
+          </p>
         </div>
 
         <div className="p-4">

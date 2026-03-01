@@ -71,7 +71,7 @@ export async function createForm(formData: FormData, clubId: string) {
     }
     const validatedData = createFormSchema.safeParse({
         name: formData.get("name"),
-        targetGroup: formData.get("targetGroup"),
+        targetGroups: formData.getAll("targetGroups"),
     });
     if (!validatedData.success) {
         return { error: validatedData.error.issues[0].message };
@@ -80,12 +80,51 @@ export async function createForm(formData: FormData, clubId: string) {
     const form = await prisma.form.create({
         data: {
             name: validatedData.data.name,
-            targetGroup: validatedData.data.targetGroup,
+            targetGroups: validatedData.data.targetGroups,
             clubId,
         },
     });
     revalidatePath(`/dashboard/form-builder`);
     return form;
+}
+
+export async function updateForm(formId: string, formData: FormData) {
+    const session = await getSession();
+    const userId = session?.id;
+    if (!userId) return null;
+
+    const form = await prisma.form.findUnique({
+        where: { id: formId },
+    });
+    if (!form) return null;
+
+    const clubUser = await prisma.clubUser.findUnique({
+        where: {
+            userId_clubId: {
+                userId,
+                clubId: form.clubId,
+            },
+        },
+    });
+    if (!clubUser) return null;
+
+    const validatedData = createFormSchema.safeParse({
+        name: formData.get("name"),
+        targetGroups: formData.getAll("targetGroups"),
+    });
+    if (!validatedData.success) {
+        return { error: validatedData.error.issues[0].message };
+    }
+
+    const updatedForm = await prisma.form.update({
+        where: { id: formId },
+        data: {
+            name: validatedData.data.name,
+            targetGroups: validatedData.data.targetGroups,
+        },
+    });
+    revalidatePath(`/dashboard/form-builder`);
+    return updatedForm;
 }
 
 export async function getFormWithItems(formId: string) {
@@ -273,4 +312,42 @@ export async function deleteFormItem(formItemId: string) {
     });
     revalidatePath(`/dashboard/form-builder/${formItem.formId}`);
     return true;
+}
+
+export async function getFormItemsForMember(memberId: string) {
+    const session = await getSession();
+    const userId = session?.id;
+    if (!userId) return null;
+
+    const member = await prisma.member.findUnique({
+        where: { id: memberId },
+    });
+    if (!member) return null;
+
+    const clubUser = await prisma.clubUser.findUnique({
+        where: {
+            userId_clubId: {
+                userId,
+                clubId: member.clubId,
+            },
+        },
+    });
+    if (!clubUser) return null;
+
+    const form = await prisma.form.findFirst({
+        where: {
+            clubId: member.clubId,
+            targetGroups: {
+                has: member.group,
+            }, isActive: true
+        },
+        include: {
+            items: {
+                include: {
+                    product: true,
+                },
+            },
+        },
+    })
+    return form;
 }

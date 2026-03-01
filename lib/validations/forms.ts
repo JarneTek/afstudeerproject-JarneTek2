@@ -2,7 +2,7 @@ import {z} from "zod";
 
 export const createFormSchema = z.object({
     name: z.string().min(1, "Name is required"),
-    targetGroup: z.string().min(1, "Target group is required"),
+    targetGroups: z.array(z.string()).min(1, "At least one target group is required"),
 });
 
 export type CreateFormSchema = z.infer<typeof createFormSchema>;

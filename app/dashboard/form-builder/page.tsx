@@ -1,15 +1,17 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Form } from "@prisma/client";
+import { Form, Member } from "@prisma/client";
 import { useClub } from "@/providers/clubprovider";
 import { getFormsByClubId, createForm } from "@/lib/actions/forms";
+import { getClubMembers } from "@/lib/actions/members";
 import FormCard from "@/components/forms/FormCard";
 
 export default function FormBuilderPage() {
   const { selectedClub } = useClub();
   const [forms, setForms] = useState<Form[]>([]);
   const formRef = useRef<HTMLFormElement>(null);
+  const [members, setMembers] = useState<Member[]>([]);
 
   useEffect(() => {
     if (!selectedClub) return;
@@ -17,6 +19,24 @@ export default function FormBuilderPage() {
       if (data) setForms(data);
     });
   }, [selectedClub]);
+
+  useEffect(() => {
+    if (!selectedClub) return;
+    getClubMembers(selectedClub.club.id).then((data) => {
+      if (data) setMembers(data);
+    });
+  }, [selectedClub]);
+
+  const uniqueGroups = [...new Set(members.map((member) => member.group))].sort(
+    (a, b) => {
+      const aIsU = a.startsWith("U");
+      const bIsU = b.startsWith("U");
+      if (aIsU && bIsU) return parseInt(a.slice(1)) - parseInt(b.slice(1));
+      if (aIsU) return -1;
+      if (bIsU) return 1;
+      return a.localeCompare(b);
+    },
+  );
 
   const handleCreateForm = async (formData: FormData) => {
     if (!selectedClub) return;
@@ -50,7 +70,16 @@ export default function FormBuilderPage() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {forms.map((form) => (
-                <FormCard key={form.id} form={form} />
+                <FormCard
+                  key={form.id}
+                  form={form}
+                  allGroups={uniqueGroups}
+                  onFormUpdate={() =>
+                    getFormsByClubId(selectedClub.club.id).then((data) => {
+                      if (data) setForms(data);
+                    })
+                  }
+                />
               ))}
             </div>
           )}
@@ -67,12 +96,27 @@ export default function FormBuilderPage() {
               placeholder="Form name (e.g. Eerste Ploeg)"
               className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-brand-green"
             />
-            <input
-              type="text"
-              name="targetGroup"
-              placeholder="Target group (e.g. Senioren)"
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-brand-green"
-            />
+            <div>
+              <p className="text-sm font-medium text-brand-navy mb-2">
+                Target Groups
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {uniqueGroups.map((group) => (
+                  <label
+                    key={group}
+                    className="flex items-center gap-1.5 bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5 text-sm cursor-pointer hover:bg-gray-100 transition-colors"
+                  >
+                    <input
+                      type="checkbox"
+                      name="targetGroups"
+                      value={group}
+                      className="accent-brand-green"
+                    />
+                    {group}
+                  </label>
+                ))}
+              </div>
+            </div>
             <button
               type="submit"
               className="bg-brand-navy text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-green transition-colors"

@@ -69,7 +69,7 @@ model Product {
 model Form {
   id          String   @id @default(uuid())
   name        String
-  targetGroup String
+  targetGroups String[]
   isActive    Boolean  @default(true)
 
   clubId      String

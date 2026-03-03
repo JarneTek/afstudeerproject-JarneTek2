@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { updateFormItem } from "@/lib/actions/forms";
 import { FormItem, Product } from "@prisma/client";
+import { uploadImage } from "@/lib/actions/upload";
 
 const ADULT_SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
 const KIDS_SIZES = ["104", "116", "128", "140", "152", "164"];
@@ -24,6 +25,7 @@ export default function AddArticleModal({
     item.product.sizes,
   );
   const [articleType, setArticleType] = useState(item.type);
+  const [imageUrl, setImageUrl] = useState<string>(item.product.imageUrl || "");
 
   const handleUpdateArticle = async (formData: FormData) => {
     setError(null);
@@ -31,6 +33,22 @@ export default function AddArticleModal({
       setError("Select at least one size.");
       return;
     }
+
+    // Upload image server-side if a file was selected
+    const imageFile = formData.get("image") as File;
+    if (imageFile && imageFile.size > 0) {
+      const imageFormData = new FormData();
+      imageFormData.set("file", imageFile);
+      const url = await uploadImage(imageFormData);
+      if (url) {
+        formData.set("imageUrl", url);
+        setImageUrl(url);
+      }
+    } else {
+      // Retain existing image URL if no new file is uploaded
+      formData.set("imageUrl", imageUrl);
+    }
+
     formData.set("sizes", selectedSizes.join(","));
     const result = await updateFormItem(formItemId, formData);
     if (result && "error" in result) {
@@ -138,6 +156,19 @@ export default function AddArticleModal({
                 className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-brand-green"
                 defaultValue={item.product.defaultPrice}
               />
+              <input
+                type="file"
+                name="image"
+                accept="image/*"
+                className="w-full text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border file:border-gray-200 file:text-sm file:bg-white file:text-brand-navy hover:file:bg-gray-50 file:cursor-pointer"
+              />
+              {imageUrl && (
+                <img
+                  src={imageUrl}
+                  alt="Preview"
+                  className="h-20 object-contain rounded"
+                />
+              )}
 
               <div className="space-y-2">
                 <p className="text-sm font-medium text-brand-navy">Sizes</p>

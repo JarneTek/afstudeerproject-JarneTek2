@@ -5,9 +5,10 @@ import { getClubOrders } from "@/lib/actions/orders";
 import { useState, useEffect } from "react";
 import { Order, OrderItem, Member, Product } from "@prisma/client";
 
-type OrderWithDetails = Order & {
+type OrderWithDetails = Omit<Order, "totalPrice"> & {
+  totalPrice: number;
   member: Member;
-  items: (OrderItem & { product: Product })[];
+  items: (Omit<OrderItem, "price"> & { price: number; product: Product })[];
 };
 
 export default function OrdersPage() {
@@ -66,7 +67,6 @@ export default function OrdersPage() {
           <p className="text-gray-500 text-sm">{orders.length} orders</p>
         </div>
 
-        {/* Tab buttons */}
         <div className="flex gap-2">
           <button
             onClick={() => setActiveTab("summary")}
@@ -90,7 +90,6 @@ export default function OrdersPage() {
           </button>
         </div>
 
-        {/* Summary tab */}
         {activeTab === "summary" && (
           <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
             {summaryItems.length === 0 ? (
@@ -131,7 +130,6 @@ export default function OrdersPage() {
           </div>
         )}
 
-        {/* Individual tab */}
         {activeTab === "individual" && (
           <div className="space-y-4">
             {orders.length === 0 ? (

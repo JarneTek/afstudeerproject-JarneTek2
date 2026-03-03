@@ -32,8 +32,20 @@ export async function getClubOrders(clubId: string) {
                 },
             },
         },
+        orderBy: {
+            createdAt: 'desc'
+        }
     });
-    return orders;
+
+    // Convert Prisma Decimal to primitive Number for Next.js Client Components
+    return orders.map((order) => ({
+        ...order,
+        totalPrice: Number(order.totalPrice),
+        items: order.items.map((item) => ({
+            ...item,
+            price: Number(item.price),
+        })),
+    }));
 }
 
 export async function createManualOrder(memberId: string, items: { productId: string; size: string; quantity: number; price: number }[], clubId: string, totalPrice: number){

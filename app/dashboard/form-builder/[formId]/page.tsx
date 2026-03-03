@@ -96,11 +96,6 @@ export default function FormDetailPage() {
                   </div>
                 </div>
 
-                <div className="border border-dashed border-gray-200 rounded-lg p-3 flex flex-col items-center gap-1 text-gray-400 cursor-pointer hover:border-brand-green transition-colors">
-                  <span className="text-lg">↑</span>
-                  <span className="text-xs">Upload image</span>
-                </div>
-
                 <p className="text-xs text-gray-400">
                   Sizes: {item.product.sizes.join(", ")}
                 </p>

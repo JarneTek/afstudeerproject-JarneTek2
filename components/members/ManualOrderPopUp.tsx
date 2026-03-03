@@ -27,7 +27,10 @@ export default function ManualOrderPopUp({
   }, [memberId]);
   useEffect(() => {
     setTotalPrice(
-      selectedItems.reduce((acc, item) => acc + item.defaultPrice * (quantity[item.id] || 1), 0),
+      selectedItems.reduce(
+        (acc, item) => acc + item.defaultPrice * (quantity[item.id] || 1),
+        0,
+      ),
     );
   }, [selectedItems, quantity]);
 
@@ -92,7 +95,10 @@ export default function ManualOrderPopUp({
                   type="number"
                   value={quantity[item.id] || 1}
                   onChange={(e) =>
-                    setQuantity({ ...quantity, [item.id]: Number(e.target.value) })
+                    setQuantity({
+                      ...quantity,
+                      [item.id]: Number(e.target.value),
+                    })
                   }
                   min={1}
                   className="w-full border border-gray-200 rounded-lg px-3 py-1.5 text-sm outline-none focus:border-brand-green"
@@ -106,16 +112,21 @@ export default function ManualOrderPopUp({
               </div>
             ))}
 
-            {/* Minimal Cart */}
             {selectedItems.length > 0 && (
               <div className="mt-4 border-t border-gray-200 pt-4">
                 <h3 className="font-bold text-brand-navy mb-2">Cart</h3>
                 {selectedItems.map((item, idx) => (
                   <div key={idx} className="flex justify-between text-sm mb-1">
                     <span>
-                      {quantity[item.id] || 1}x {item.name} ({size[item.id] || "No size"})
+                      {quantity[item.id] || 1}x {item.name} (
+                      {size[item.id] || "No size"})
                     </span>
-                    <span>€{(item.defaultPrice * (quantity[item.id] || 1)).toFixed(2)}</span>
+                    <span>
+                      €
+                      {(item.defaultPrice * (quantity[item.id] || 1)).toFixed(
+                        2,
+                      )}
+                    </span>
                   </div>
                 ))}
                 <div className="flex justify-between font-bold text-brand-navy mt-2 pt-2 border-t border-gray-100">

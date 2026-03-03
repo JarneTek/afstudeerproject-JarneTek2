@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createProductForForm } from "@/lib/actions/forms";
+import { uploadImage } from "@/lib/actions/upload";
 
 const ADULT_SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
 const KIDS_SIZES = ["104", "116", "128", "140", "152", "164"];
@@ -16,6 +17,7 @@ export default function AddArticleModal({ formId, onArticleAdded }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [selectedSizes, setSelectedSizes] = useState<string[]>(ADULT_SIZES);
   const [articleType, setArticleType] = useState<"BASIC" | "EXTRA">("BASIC");
+  const [imageUrl, setImageUrl] = useState("");
 
   const handleAddArticle = async (formData: FormData) => {
     setError(null);
@@ -23,6 +25,19 @@ export default function AddArticleModal({ formId, onArticleAdded }: Props) {
       setError("Select at least one size.");
       return;
     }
+
+    // Upload image server-side if a file was selected
+    const imageFile = formData.get("image") as File;
+    if (imageFile && imageFile.size > 0) {
+      const imageFormData = new FormData();
+      imageFormData.set("file", imageFile);
+      const url = await uploadImage(imageFormData);
+      if (url) {
+        formData.set("imageUrl", url);
+        setImageUrl(url);
+      }
+    }
+
     formData.set("sizes", selectedSizes.join(","));
     const result = await createProductForForm(formId, formData);
     if (result && "error" in result) {
@@ -33,6 +48,7 @@ export default function AddArticleModal({ formId, onArticleAdded }: Props) {
     setError(null);
     setSelectedSizes(ADULT_SIZES);
     setArticleType("BASIC");
+    setImageUrl("");
     onArticleAdded();
   };
 
@@ -124,6 +140,20 @@ export default function AddArticleModal({ formId, onArticleAdded }: Props) {
                 min="0"
                 className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-brand-green"
               />
+
+              <input
+                type="file"
+                name="image"
+                accept="image/*"
+                className="w-full text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border file:border-gray-200 file:text-sm file:bg-white file:text-brand-navy hover:file:bg-gray-50 file:cursor-pointer"
+              />
+              {imageUrl && (
+                <img
+                  src={imageUrl}
+                  alt="Preview"
+                  className="h-20 object-contain rounded"
+                />
+              )}
 
               <div className="space-y-2">
                 <p className="text-sm font-medium text-brand-navy">Sizes</p>

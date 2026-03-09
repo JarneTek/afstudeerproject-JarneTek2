@@ -96,3 +96,27 @@ export async function importMembers(membersData: Record<string, string>[], clubI
     });
     revalidatePath(`/dashboard/members`);
 }
+
+export async function getMemberFormItemsFromToken(token: string) {
+    const member = await prisma.member.findUnique({
+        where: {
+            orderToken: token,
+        },
+    });
+    if (!member) {
+        throw new Error("Member not found");
+    }
+   const form = await prisma.form.findFirst({
+    where: {
+        clubId: member.clubId,
+        targetGroups: { has: member.group },
+    },
+    include: {
+        items: {
+            include: { product: true },
+        },
+    },
+});
+
+    return form;
+}

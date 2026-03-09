@@ -1,4 +1,5 @@
 import TestEmailButton from "@/components/mailing/TestEmailButton";
+import StartFittingDayModal from "@/components/dashboard/startFittingDayModal";
 
 export default function DashboardPage() {
   return (
@@ -16,10 +17,7 @@ export default function DashboardPage() {
             <h3 className="font-bold text-brand-navy mb-4">
               No Active Fitting Day
             </h3>
-            <button className="bg-brand-navy text-white px-4 py-2 rounded-lg text-sm">
-              Start New Fitting Day
-            </button>
-            <TestEmailButton />
+            <StartFittingDayModal />
           </div>
         </div>
       </div>

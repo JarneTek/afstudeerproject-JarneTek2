@@ -7,6 +7,7 @@ import { getFormsByClubId, createForm } from "@/lib/actions/forms";
 import { getClubMembers } from "@/lib/actions/members";
 import FormCard from "@/components/forms/FormCard";
 import NoMembersState from "@/components/dashboard/NoMembersState";
+import LoadingButton from "@/components/ui/LoadingButton";
 
 export default function FormBuilderPage() {
   const { selectedClub } = useClub();
@@ -168,15 +169,16 @@ export default function FormBuilderPage() {
             </div>
             {error && <p className="text-sm text-red-500">{error}</p>}
 
-            <button
+            <LoadingButton
               type="submit"
+              loadingText="Adding..."
               className="bg-brand-navy text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-green transition-colors"
             >
               + Create Kit
-            </button>
+            </LoadingButton>
           </form>
         </div>
-      </div>
+      </div>²
     </div>
   );
 }

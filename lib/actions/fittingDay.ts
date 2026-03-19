@@ -71,7 +71,7 @@ export async function startFittingDay(clubId: string, formId: string, formData: 
             year: 'numeric'
         });
 
-        await sendOrderLinkEmail(orderLink, club.name, fittingDay.startTime, fittingDay.endTime, formattedDate);
+        await sendOrderLinkEmail(orderLink, member.email, club.name, fittingDay.startTime, fittingDay.endTime, formattedDate);
     }
     return { success: "Fitting day started successfully", fittingDay };
 

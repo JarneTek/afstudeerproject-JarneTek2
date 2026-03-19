@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { createProductForForm } from "@/lib/actions/forms";
 import { uploadImage } from "@/lib/actions/upload";
+import LoadingButton from "@/components/ui/LoadingButton";
 
 const ADULT_SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
 const KIDS_SIZES = ["104", "116", "128", "140", "152", "164"];
@@ -54,12 +55,14 @@ export default function AddArticleModal({ formId, onArticleAdded }: Props) {
 
   return (
     <>
-      <button
+      <LoadingButton
+        type="submit"
+        loadingText="Adding..."
         onClick={() => setIsModalOpen(true)}
         className="bg-brand-navy text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-green transition-colors"
       >
-        + Add Article
-      </button>
+        Add Article
+      </LoadingButton>
 
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -285,12 +288,13 @@ export default function AddArticleModal({ formId, onArticleAdded }: Props) {
                 >
                   Cancel
                 </button>
-                <button
+                <LoadingButton
                   type="submit"
-                  className="flex-1 bg-brand-navy text-white py-2 rounded-lg text-sm hover:bg-brand-green transition-colors"
+                  loadingText="Adding..."
+                  className="flex-1 bg-brand-navy-light hover:bg-brand-navy text-white text-sm font-medium py-2 rounded-lg transition-colors"
                 >
                   Add Article
-                </button>
+                </LoadingButton>
               </div>
             </form>
           </div>

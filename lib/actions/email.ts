@@ -4,10 +4,10 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export async function sendOrderLinkEmail(orderLink: string, clubName: string, startDate: string, endDate: string, date: string) {
+export async function sendOrderLinkEmail(orderLink: string, memberEmail: string, clubName: string, startDate: string, endDate: string, date: string) {
   const { data, error } = await resend.emails.send({
     from: "onboarding@resend.dev",
-    to: "jarne.tekin@hotmail.com",
+    to: memberEmail,
     subject: "Your fitting day is scheduled!",
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eaeaea; border-radius: 10px;">
@@ -64,7 +64,7 @@ export async function sendReminderEmail(
 
   const { data, error } = await resend.emails.send({
     from: "onboarding@resend.dev",
-    to: "jarne.tekin@hotmail.com", // TODO: vervang door memberEmail na domein verificatie in Resend
+    to: memberEmail,
     subject: `Reminder: je pasdag bij ${clubName} is morgen!`,
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eaeaea; border-radius: 10px;">

@@ -43,7 +43,6 @@ export default async function FormBuilderPage() {
     return (
       <NoMembersState
         clubName={selectedClub?.name}
-        onMembersImported={() => getClubMembers(clubid)}
       />
     );
   }

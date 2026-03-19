@@ -17,7 +17,7 @@ export function middleware(request: NextRequest) {
 
   // 2. Redirect logged-in users away from auth pages
   if (pathname === "/login" || pathname === "/register") {
-    if (token) {
+    if (token && !request.headers.get("next-action")) {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
   }

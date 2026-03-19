@@ -20,7 +20,7 @@ export default function StartFittingDayModal() {
       setForms(fetchedForms || []);
     }
     loadForms();
-  }, [selectedClub?.clubId]);
+  }, [selectedClub]);
 
   const handleStartFittingDay = async (formData: FormData) => {
     setErrorField({});

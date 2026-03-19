@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Form } from "@prisma/client";
-import { updateForm } from "@/lib/actions/forms";
+import { updateForm, deleteForm } from "@/lib/actions/forms";
 import { useState } from "react";
 
 type FormCardProps = {
@@ -21,6 +21,7 @@ export default function FormCard({
     form.targetGroups,
   );
   const [error, setError] = useState<string | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const handleCheckbox = (group: string) => {
     if (selectedGroups.includes(group)) {
@@ -30,9 +31,19 @@ export default function FormCard({
     }
   };
 
+  const handleDeleteForm = async () => {
+    const result = await deleteForm(form.id);
+    if (result?.error) {
+      setError(result.error);
+      return;
+    }
+    setShowDeleteModal(false);
+    onFormUpdate();
+  };
+
   const handleUpdateForm = async (formData: FormData) => {
     const result = await updateForm(form.id, formData);
-    if(result?.error){
+    if (result?.error) {
       setError(result.error);
       return;
     }
@@ -69,6 +80,13 @@ export default function FormCard({
           className="mt-3 text-xs text-gray-400 hover:text-brand-navy border border-gray-200 rounded-lg px-3 py-1.5 hover:border-brand-navy transition-colors"
         >
           Edit Form
+        </button>
+
+        <button
+          onClick={() => setShowDeleteModal(true)}
+          className="bg-red-500 text-white ml-2 px-3 py-1.5 rounded-lg text-xs hover:bg-red-600 transition-colors"
+        >
+          Delete Form
         </button>
       </div>
 
@@ -137,6 +155,46 @@ export default function FormCard({
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {showDeleteModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          onClick={() => setShowDeleteModal(false)}
+        >
+          <div
+            className="bg-white rounded-xl shadow-xl p-6 w-full max-w-sm"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-lg font-bold text-brand-navy mb-2">
+              Delete Form?
+            </h3>
+            <p className="text-sm text-gray-500 mb-6">
+              Are you sure you want to delete{" "}
+              <span className="font-semibold text-brand-navy">{form.name}</span>
+              ? This action cannot be undone.
+            </p>
+
+            {error && <p className="text-sm text-red-500 mb-4">{error}</p>}
+
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => setShowDeleteModal(false)}
+                className="flex-1 border border-gray-200 text-gray-600 px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleDeleteForm}
+                className="flex-1 bg-red-500 text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-red-600 transition-colors"
+              >
+                Delete
+              </button>
+            </div>
           </div>
         </div>
       )}

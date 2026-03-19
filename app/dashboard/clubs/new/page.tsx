@@ -3,6 +3,7 @@
 import { createClub } from "@/lib/actions/clubs";
 import { useState } from "react";
 import Link from "next/link";
+import LoadingButton from "@/components/ui/LoadingButton";
 
 export default function NewClubPage() {
   const [primaryColor, setPrimaryColor] = useState("#1F2937");
@@ -123,12 +124,13 @@ export default function NewClubPage() {
           >
             Cancel
           </Link>
-          <button
+          <LoadingButton
             type="submit"
+            loadingText="Creating..."
             className="px-6 py-2 bg-brand-green text-white rounded text-sm font-medium hover:opacity-90"
           >
             Create Club
-          </button>
+          </LoadingButton>
         </div>
       </form>
     </div>

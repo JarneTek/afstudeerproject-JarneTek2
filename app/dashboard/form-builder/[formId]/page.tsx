@@ -166,31 +166,37 @@ export default function FormDetailPage() {
                   {basicItems.map((item) => (
                     <div
                       key={item.id}
-                      className="border border-gray-200 rounded-xl overflow-hidden"
+                      className="border border-gray-200 rounded-xl overflow-hidden bg-white"
                     >
-                      {item.product.imageUrl ? (
-                        <img
-                          src={item.product.imageUrl}
-                          alt={item.product.name}
-                        />
-                      ) : (
-                        <div className="flex flex-col items-center justify-center text-center">
-                          <div className="w-20 h-20 bg-brand-green/10 text-brand-green rounded-2xl flex items-center justify-center mb-2 shadow-sm p-3">
-                            <span className="text-[11px] font-bold leading-tight uppercase break-words overflow-hidden">
-                              {item.product.name}
-                            </span>
+                      {/* AANGEPAST: Vaste hoogte (h-48), lichte achtergrond en object-contain */}
+                      <div className="w-full h-48 bg-gray-50 border-b border-gray-100 flex items-center justify-center p-4">
+                        {item.product.imageUrl ? (
+                          <img
+                            src={item.product.imageUrl}
+                            alt={item.product.name}
+                            className="max-w-full max-h-full object-contain mix-blend-multiply"
+                          />
+                        ) : (
+                          <div className="flex flex-col items-center justify-center text-center opacity-60">
+                            <div className="w-16 h-16 bg-brand-green/10 text-brand-green rounded-2xl flex items-center justify-center mb-2 shadow-sm p-2">
+                              <span className="text-[10px] font-bold leading-tight uppercase break-words overflow-hidden line-clamp-2">
+                                {item.product.name}
+                              </span>
+                            </div>
+                            <span className="text-xs text-gray-400">Geen foto</span>
                           </div>
-                        </div>
-                      )}
+                        )}
+                      </div>
+
                       <div className="p-4 space-y-2">
                         <p className="font-semibold text-brand-navy">
                           {item.product.name}
                         </p>
                         <p className="text-xs text-gray-400">Select Size</p>
-                        <select className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-400 bg-white">
-                          <option>Choose a size...</option>
+                        <select className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-700 bg-white focus:border-brand-green outline-none transition-colors">
+                          <option value="">Choose a size...</option>
                           {item.product.sizes.map((size) => (
-                            <option key={size}>{size}</option>
+                            <option key={size} value={size}>{size}</option>
                           ))}
                         </select>
                       </div>
@@ -210,20 +216,37 @@ export default function FormDetailPage() {
                   {extraItems.map((item) => (
                     <div
                       key={item.id}
-                      className="border border-gray-200 rounded-xl overflow-hidden"
+                      className="border border-gray-200 rounded-xl overflow-hidden bg-white"
                     >
-                      <div className="bg-gray-100 h-36 flex items-center justify-center text-gray-300 text-sm">
-                        Image Placeholder
+                      {/* AANGEPAST: Zelfde logica toegepast op de Extra items ipv de grijze placeholder */}
+                      <div className="w-full h-48 bg-gray-50 border-b border-gray-100 flex items-center justify-center p-4">
+                        {item.product.imageUrl ? (
+                          <img
+                            src={item.product.imageUrl}
+                            alt={item.product.name}
+                            className="max-w-full max-h-full object-contain mix-blend-multiply"
+                          />
+                        ) : (
+                          <div className="flex flex-col items-center justify-center text-center opacity-60">
+                            <div className="w-16 h-16 bg-brand-navy/5 text-brand-navy rounded-2xl flex items-center justify-center mb-2 shadow-sm p-2">
+                              <span className="text-[10px] font-bold leading-tight uppercase break-words overflow-hidden line-clamp-2">
+                                {item.product.name}
+                              </span>
+                            </div>
+                            <span className="text-xs text-gray-400">Geen foto</span>
+                          </div>
+                        )}
                       </div>
+
                       <div className="p-4 space-y-2">
                         <p className="font-semibold text-brand-navy">
                           {item.product.name}
                         </p>
                         <p className="text-xs text-gray-400">Select Size</p>
-                        <select className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-400 bg-white">
-                          <option>Choose a size...</option>
+                        <select className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-700 bg-white focus:border-brand-green outline-none transition-colors">
+                          <option value="">Choose a size...</option>
                           {item.product.sizes.map((size) => (
-                            <option key={size}>{size}</option>
+                            <option key={size} value={size}>{size}</option>
                           ))}
                         </select>
                       </div>
@@ -231,6 +254,7 @@ export default function FormDetailPage() {
                   ))}
                 </div>
               )}
+
             </div>
           )}
         </div>

@@ -37,6 +37,7 @@ export default function   KitItemCard({ item, onAdd }: { item: KitItem, onAdd: (
     <div>
       <p>{item.product.name}</p>
       <p>{item.product.description}</p>
+      <p>{item.product.sku}</p>
       <p>€{itemPrice}</p>
       <select required onChange={(e) => setSelectedSize(e.target.value)}>
         {item.product.sizes.map((size) => (

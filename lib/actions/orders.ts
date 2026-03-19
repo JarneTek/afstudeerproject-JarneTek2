@@ -184,3 +184,27 @@ try {
     return { success: false };
   }
 }
+
+export async function toggleOrderStatus(orderId: string, newStatus: "PENDING" | "CONFIRMED") {
+    const session = await getSession();
+    if (!session) {
+        return { error: "No session found" };
+    }
+
+    try {
+        await prisma.order.update({
+            where: {
+                id: orderId,
+            },
+            data: {
+                status: newStatus,
+            },
+        });
+
+        revalidatePath("/dashboard/order-overview");
+        return { success: true };
+    } catch (error) {
+        console.error("Failed to toggle order status:", error);
+        return { error: "Failed to update order status" };
+    }
+}

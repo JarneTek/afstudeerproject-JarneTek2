@@ -1,7 +1,7 @@
 "use client";
 
 import { useClub } from "@/providers/clubprovider";
-import { getClubOrders, getClubFittingDays, confirmOrder } from "@/lib/actions/orders";
+import { getClubOrders, getClubFittingDays, confirmOrder, toggleOrderStatus } from "@/lib/actions/orders";
 import { useState, useEffect } from "react";
 import { Order, OrderItem, Member, Product, FittingDay } from "@prisma/client";
 import { printOrderPDF } from "@/lib/helpers/print";
@@ -24,6 +24,7 @@ export default function OrdersPage() {
   const [activeFittingDay, setActiveFittingDay] = useState<string | null>(null);
   const [fittingDays, setFittingDays] = useState<FittingDay[]>([]);
   const [confirmingOrderId, setConfirmingOrderId] = useState<string | null>(null);
+  const [togglingOrderId, setTogglingOrderId] = useState<string | null>(null);
   const [confirmMessage, setConfirmMessage] = useState<string | null>(null);
   const [confirmError, setConfirmError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -47,6 +48,27 @@ export default function OrdersPage() {
     }
 
     setConfirmingOrderId(null);
+  };
+
+  const handleSetToPending = async (orderId: string) => {
+    setTogglingOrderId(orderId);
+    
+    const res = await toggleOrderStatus(orderId, "PENDING");
+    
+    if (res.error) {
+      alert(res.error);
+    } else {
+      const updatedOrders = orders.map((order) => {
+        if (order.id === orderId) {
+          return { ...order, status: "PENDING" as const };
+        }
+        return order;
+      });
+      
+      setOrders(updatedOrders);
+    }
+
+    setTogglingOrderId(null);
   };
 
   useEffect(() => {
@@ -257,17 +279,30 @@ export default function OrdersPage() {
                         Order #{order.orderNumber}
                       </p>
                     </div>
-                    <span
-                      className={`text-xs font-semibold px-3 py-1 rounded-full ${
-                        order.status === "DELIVERED"
-                          ? "bg-green-100 text-green-700"
-                          : order.status === "PENDING"
-                            ? "bg-yellow-100 text-yellow-700"
-                            : "bg-blue-100 text-blue-700"
-                      }`}
-                    >
-                      {order.status}
-                    </span>
+                    <div className="flex items-center gap-3">
+                      <span
+                        className={`text-xs font-semibold px-3 py-1 rounded-full flex-shrink-0 ${
+                          order.status === "DELIVERED"
+                            ? "bg-green-100 text-green-700"
+                            : order.status === "PENDING"
+                              ? "bg-yellow-100 text-yellow-700"
+                              : "bg-blue-100 text-blue-700"
+                        }`}
+                      >
+                        {order.status}
+                      </span>
+                      
+                      {order.status === "CONFIRMED" && (
+                        <button
+                          type="button"
+                          disabled={togglingOrderId === order.id}
+                          onClick={() => handleSetToPending(order.id)}
+                          className="text-xs text-brand-navy underline hover:text-brand-green transition-colors disabled:opacity-50 disabled:no-underline"
+                        >
+                          {togglingOrderId === order.id ? "Updating..." : "Set to Pending"}
+                        </button>
+                      )}
+                    </div>
                   </div>
                   <table className="w-full text-sm">
                     <thead>

@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { createProductForForm } from "@/lib/actions/forms";
+import { updateFormItem } from "@/lib/actions/forms";
+import { FormItem, Product } from "@prisma/client";
 import { uploadImage } from "@/lib/actions/upload";
 import LoadingButton from "@/components/ui/LoadingButton";
 
@@ -9,19 +10,25 @@ const ADULT_SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
 const KIDS_SIZES = ["104", "116", "128", "140", "152", "164"];
 
 type Props = {
-  formId: string;
-  onArticleAdded: () => void;
+  formItemId: string;
+  item: FormItem & { product: Product };
 };
 
-export default function AddArticleModal({ formId, onArticleAdded }: Props) {
+export default function UpdateArticleModal({
+  formItemId,
+  item
+}: Props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedSizes, setSelectedSizes] = useState<string[]>(ADULT_SIZES);
-  const [articleType, setArticleType] = useState<"BASIC" | "EXTRA">("BASIC");
+  const [selectedSizes, setSelectedSizes] = useState<string[]>(
+    item.product.sizes,
+  );
+  const [articleType, setArticleType] = useState(item.type);
+  const [imageUrl, setImageUrl] = useState<string>(item.product.imageUrl || "");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [productName, setProductName] = useState("");
+  const [productName, setProductName] = useState(item.product.name);
 
-  const handleAddArticle = async (formData: FormData) => {
+  const handleUpdateArticle = async (formData: FormData) => {
     setError(null);
     if (selectedSizes.length === 0) {
       setError("Select at least one size.");
@@ -35,11 +42,14 @@ export default function AddArticleModal({ formId, onArticleAdded }: Props) {
       const url = await uploadImage(imageFormData);
       if (url) {
         formData.set("imageUrl", url);
+        setImageUrl(url);
       }
+    } else {
+      formData.set("imageUrl", imageUrl);
     }
 
     formData.set("sizes", selectedSizes.join(","));
-    const result = await createProductForForm(formId, formData);
+    const result = await updateFormItem(formItemId, formData);
     if (result && "error" in result) {
       setError(result.error);
       return;
@@ -49,26 +59,25 @@ export default function AddArticleModal({ formId, onArticleAdded }: Props) {
     setSelectedSizes(ADULT_SIZES);
     setArticleType("BASIC");
     setImagePreview(null);
-    onArticleAdded();
-    setProductName("");
+    setProductName(item.product.name);
   };
 
   return (
     <>
-      <LoadingButton
-        type="submit"
-        loadingText="Adding..."
+      <button
         onClick={() => setIsModalOpen(true)}
-        className="bg-brand-navy text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-green transition-colors"
+        className="text-gray-400 hover:text-brand-navy transition-colors text-sm"
       >
-        Add Article
-      </LoadingButton>
+        ✎
+      </button>
 
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-md space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-brand-navy">Add Article</h2>
+              <h2 className="text-lg font-bold text-brand-navy">
+                Update Article
+              </h2>
               <button
                 onClick={() => {
                   setIsModalOpen(false);
@@ -88,7 +97,7 @@ export default function AddArticleModal({ formId, onArticleAdded }: Props) {
               </p>
             )}
 
-            <form action={handleAddArticle} className="space-y-3">
+            <form action={handleUpdateArticle} className="space-y-3">
               <div className="flex rounded-lg border border-gray-200 overflow-hidden">
                 <button
                   type="button"
@@ -110,7 +119,7 @@ export default function AddArticleModal({ formId, onArticleAdded }: Props) {
                 <input
                   type="number"
                   name="includedInBasicCount"
-                  defaultValue={1}
+                  defaultValue={item.includedInBasicCount}
                   min={1}
                   placeholder="Items included in basic package"
                   className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-brand-green"
@@ -121,22 +130,24 @@ export default function AddArticleModal({ formId, onArticleAdded }: Props) {
               <input
                 type="text"
                 name="name"
-                value={productName}
-                onChange={(e) => setProductName(e.target.value)}
                 placeholder="Article name"
                 className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-brand-green"
+                value={productName}
+                onChange={(e) => setProductName(e.target.value)}
               />
               <input
                 type="text"
                 name="description"
                 placeholder="Description (optional)"
                 className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-brand-green"
+                defaultValue={item.product.description || ""}
               />
               <input
                 type="text"
                 name="sku"
                 placeholder="SKU (optional)"
                 className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-brand-green"
+                defaultValue={item.product.sku || ""}
               />
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
@@ -149,6 +160,7 @@ export default function AddArticleModal({ formId, onArticleAdded }: Props) {
                   step="0.01"
                   min="0"
                   className="w-full border border-gray-200 rounded-lg pl-7 pr-3 py-2 text-sm outline-none focus:border-brand-green"
+                  defaultValue={item.product.defaultPrice}
                 />
               </div>
 
@@ -157,9 +169,9 @@ export default function AddArticleModal({ formId, onArticleAdded }: Props) {
                   Article Image
                 </p>
                 <label className="flex flex-col items-center justify-center w-full border-2 border-dashed border-gray-200 rounded-xl p-4 cursor-pointer hover:border-brand-navy hover:bg-gray-50 transition-colors group">
-                  {imagePreview ? (
+                  {imagePreview || imageUrl ? (
                     <img
-                      src={imagePreview}
+                      src={imagePreview || imageUrl}
                       alt="Preview"
                       className="h-28 object-contain rounded-lg"
                     />
@@ -208,10 +220,13 @@ export default function AddArticleModal({ formId, onArticleAdded }: Props) {
                     }}
                   />
                 </label>
-                {imagePreview && (
+                {(imagePreview || imageUrl) && (
                   <button
                     type="button"
-                    onClick={() => setImagePreview(null)}
+                    onClick={() => {
+                      setImagePreview(null);
+                      setImageUrl("");
+                    }}
                     className="text-xs text-gray-400 hover:text-red-500 transition-colors"
                   >
                     Remove image
@@ -293,7 +308,7 @@ export default function AddArticleModal({ formId, onArticleAdded }: Props) {
                   loadingText="Adding..."
                   className="flex-1 bg-brand-navy-light hover:bg-brand-navy text-white text-sm font-medium py-2 rounded-lg transition-colors"
                 >
-                  Add Article
+                  Save Changes
                 </LoadingButton>
               </div>
             </form>

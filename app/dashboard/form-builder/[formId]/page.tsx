@@ -1,10 +1,8 @@
 import { getFormWithItems } from "@/lib/actions/forms";
-import { Form, FormItem, Product } from "@prisma/client";
 import AddArticleModal from "@/components/kit-builder/AddArticleModal";
 import FormItemList from "@/components/kit-builder/FormItemList";
 import FormItemPreviewSection from "@/components/kit-builder/FormItemPreviewSection";
 
-type FormWithItems = Form & { items: (FormItem & { product: Product })[] };
 
 export default async function FormDetailPage({
   params,

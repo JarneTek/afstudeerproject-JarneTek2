@@ -97,7 +97,7 @@ export default function OrderDashboard({
           {["summary", "individual", "pending"].map((tab) => (
             <button
               key={tab}
-              onClick={() => setActiveTab(tab as any)}
+              onClick={() => setActiveTab(tab as "summary" | "individual" | "pending")}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 activeTab === tab
                   ? "bg-brand-navy text-white"

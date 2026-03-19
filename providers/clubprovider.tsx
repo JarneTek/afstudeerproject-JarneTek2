@@ -3,7 +3,10 @@ import { createContext, useContext, useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { getUserClubs } from "@/lib/actions/clubs";
 import type { ClubEntry } from "@/lib/validations/clubs";
-import { setActiveClubCookie, getActiveClubCookie } from "@/lib/actions/active-club";
+import {
+  setActiveClubCookie,
+  getActiveClubCookie,
+} from "@/lib/actions/active-club";
 
 type ClubContextType = {
   clubs: ClubEntry[];
@@ -30,12 +33,16 @@ export default function ClubProvider({
   const pathname = usePathname();
 
   useEffect(() => {
-    getUserClubs().then((data) => {
+    getUserClubs().then(async (data) => {
       setClubs(data as ClubEntry[]);
       if (data.length > 0 && !selectedClub) {
-        const firstClub = data[0] as ClubEntry;
-        setSelectedClub(firstClub);
-        setActiveClubCookie(firstClub.clubId);
+        const savedClubId = await getActiveClubCookie();
+
+        const previousClub = data.find((c: any) => c.clubId === savedClubId);
+        const clubToSet = previousClub || data[0];
+
+        setSelectedClub(clubToSet as ClubEntry);
+        setActiveClubCookie(clubToSet.clubId);
       }
     });
   }, [pathname]);

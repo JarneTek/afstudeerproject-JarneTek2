@@ -14,10 +14,7 @@ type Props = {
   item: FormItem & { product: Product };
 };
 
-export default function UpdateArticleModal({
-  formItemId,
-  item
-}: Props) {
+export default function UpdateArticleModal({ formItemId, item }: Props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedSizes, setSelectedSizes] = useState<string[]>(
@@ -242,14 +239,14 @@ export default function UpdateArticleModal({
                     onClick={() => setSelectedSizes(ADULT_SIZES)}
                     className="text-xs px-3 py-1 rounded-full border border-brand-navy text-brand-navy hover:bg-brand-navy hover:text-white transition-colors"
                   >
-                    Volwassenen
+                    Adults
                   </button>
                   <button
                     type="button"
                     onClick={() => setSelectedSizes(KIDS_SIZES)}
                     className="text-xs px-3 py-1 rounded-full border border-brand-navy text-brand-navy hover:bg-brand-navy hover:text-white transition-colors"
                   >
-                    Kinderen
+                    Kids
                   </button>
                   <button
                     type="button"
@@ -258,14 +255,14 @@ export default function UpdateArticleModal({
                     }
                     className="text-xs px-3 py-1 rounded-full border border-gray-300 text-gray-500 hover:bg-gray-100 transition-colors"
                   >
-                    Alles
+                    All
                   </button>
                   <button
                     type="button"
                     onClick={() => setSelectedSizes([])}
                     className="text-xs px-3 py-1 rounded-full border border-gray-300 text-gray-500 hover:bg-gray-100 transition-colors"
                   >
-                    Wissen
+                    Clear
                   </button>
                 </div>
                 <div className="flex flex-wrap gap-2">

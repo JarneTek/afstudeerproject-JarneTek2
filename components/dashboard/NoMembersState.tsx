@@ -11,7 +11,7 @@ export default function NoMembersState({ clubName, onMembersImported }: NoMember
   return (
     <div className="flex-1 flex flex-col items-center justify-center p-6 text-center animate-in fade-in zoom-in duration-500">
       <div className="max-w-md bg-white rounded-3xl shadow-2xl shadow-brand-navy/5 border border-gray-100 p-10 flex flex-col items-center">
-        {/* Icoon met subtiele animatie/rotatie */}
+
         <div className="w-20 h-20 bg-brand-green/10 rounded-2xl flex items-center justify-center mb-8 rotate-3 hover:rotate-0 transition-transform duration-300">
           <svg
             className="w-10 h-10 text-brand-green"
@@ -28,14 +28,14 @@ export default function NoMembersState({ clubName, onMembersImported }: NoMember
           </svg>
         </div>
 
-        <h2 className="text-2xl font-bold text-brand-navy mb-3">Begin met je leden</h2>
+        <h2 className="text-2xl font-bold text-brand-navy mb-3">Start with your members</h2>
         <p className="text-gray-500 mb-8 leading-relaxed">
-          Je hebt nog geen leden toegevoegd aan{" "}
+          You haven't added any members to{" "}
           <span className="font-semibold text-brand-navy">
-            {clubName || "jouw club"}
+            {clubName || "your club"}
           </span>
-          . Upload eerst je ledenlijst om kits te kunnen koppelen aan de juiste
-          teams.
+          . First upload your member list to link kits to the correct
+          groups.
         </p>
 
         <div className="w-full mt-2">
@@ -44,13 +44,13 @@ export default function NoMembersState({ clubName, onMembersImported }: NoMember
 
         <div className="mt-8 pt-6 border-t border-gray-100 w-full">
           <p className="text-sm text-gray-500">
-            Liever handmatig een lid toevoegen?
+            Prefer to add a member manually?
           </p>
           <a
             href="/dashboard/members"
             className="inline-flex items-center mt-2 text-brand-green hover:text-brand-green-dark font-medium transition-colors"
           >
-            Ga naar de ledenpagina
+            Go to the members page
             <svg
               className="w-4 h-4 ml-1"
               fill="none"

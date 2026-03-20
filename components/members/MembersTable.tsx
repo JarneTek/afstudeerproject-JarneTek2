@@ -150,7 +150,7 @@ export default function MembersTable({
                         <EditMember member={member} />
 
                         <div className="w-full hover:bg-gray-50 transition-colors cursor-pointer">
-                          <div className="[&_button]:!border-none [&_button]:!bg-transparent [&_button]:!w-full [&_button]:!text-left [&_button]:!px-4 [&_button]:!py-2.5 [&_button]:!rounded-none [&_button>h1]:!font-normal [&_button>h1]:!text-sm [&_button>h1]:!text-gray-700">
+                          <div className="[&>button]:!border-none [&>button]:!bg-transparent [&>button]:!w-full [&>button]:!text-left [&>button]:!px-4 [&>button]:!py-2.5 [&>button]:!rounded-none [&>button>h1]:!font-normal [&>button>h1]:!text-sm [&>button>h1]:!text-gray-700">
                             <ManualOrderPopUp
                               memberId={member.id}
                               clubId={clubId}

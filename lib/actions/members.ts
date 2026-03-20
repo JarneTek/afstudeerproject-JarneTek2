@@ -123,8 +123,15 @@ export async function getMemberFormItemsFromToken(token: string) {
             },
         },
     });
+    if (!form) return null;
 
-    return form;
+    return {
+        ...form,
+        items: form.items.map((item) => ({
+            ...item,
+            customPrice: item.customPrice ? Number(item.customPrice) : null,
+        })),
+    };
 }
 
 export async function updateMember(memberId: string, data: {

@@ -7,12 +7,12 @@ interface LoadingButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   children: React.ReactNode;
 }
 
-export default function LoadingButton({ 
-  loadingText, 
-  children, 
-  className = "", 
+export default function LoadingButton({
+  loadingText,
+  children,
+  className = "",
   disabled,
-  ...props 
+  ...props
 }: LoadingButtonProps) {
   const { pending } = useFormStatus();
 

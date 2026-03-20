@@ -121,7 +121,9 @@ export default function StartFittingDayModal() {
                     required
                   />
                   {errorField.location && (
-                    <p className="text-red-500 text-sm">{errorField.location[0]}</p>
+                    <p className="text-red-500 text-sm">
+                      {errorField.location[0]}
+                    </p>
                   )}
                 </div>
               </div>
@@ -142,7 +144,9 @@ export default function StartFittingDayModal() {
                     required
                   />
                   {errorField.startTime && (
-                    <p className="text-red-500 text-sm">{errorField.startTime[0]}</p>
+                    <p className="text-red-500 text-sm">
+                      {errorField.startTime[0]}
+                    </p>
                   )}
                 </div>
                 <div>
@@ -160,7 +164,9 @@ export default function StartFittingDayModal() {
                     required
                   />
                   {errorField.endTime && (
-                    <p className="text-red-500 text-sm">{errorField.endTime[0]}</p>
+                    <p className="text-red-500 text-sm">
+                      {errorField.endTime[0]}
+                    </p>
                   )}
                 </div>
               </div>

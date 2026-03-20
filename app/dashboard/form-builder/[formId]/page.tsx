@@ -3,7 +3,6 @@ import AddArticleModal from "@/components/kit-builder/AddArticleModal";
 import FormItemList from "@/components/kit-builder/FormItemList";
 import FormItemPreviewSection from "@/components/kit-builder/FormItemPreviewSection";
 
-
 export default async function FormDetailPage({
   params,
 }: {

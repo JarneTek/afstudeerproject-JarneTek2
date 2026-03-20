@@ -13,10 +13,10 @@ const config: Config = {
       },
       colors: {
         brand: {
-          navy: "#0f172a", // Dark background
-          "navy-light": "#1e293b", // Lighter navy for buttons/sidebar
-          green: "#10b981", // Emerald 500 equivalent for accents
-          "green-dark": "#059669", // Hover state
+          navy: "#0f172a",
+          "navy-light": "#1e293b",
+          green: "#10b981",
+          "green-dark": "#059669",
         }
       }
     },

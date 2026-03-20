@@ -1,20 +1,20 @@
 "use client";
- 
+
 import { FormItem, Product } from "@prisma/client";
- 
+
 type Props = {
   title: string;
   subtitle: string;
   items: (FormItem & { product: Product })[];
 };
- 
+
 export default function FormItemPreviewSection({
   title,
   subtitle,
   items,
 }: Props) {
   if (items.length === 0) return null;
- 
+
   return (
     <div className="space-y-4 pt-6 first:pt-0">
       <div>
@@ -45,7 +45,7 @@ export default function FormItemPreviewSection({
                 </div>
               )}
             </div>
- 
+
             <div className="p-4 space-y-2">
               <p className="font-semibold text-brand-navy">
                 {item.product.name}

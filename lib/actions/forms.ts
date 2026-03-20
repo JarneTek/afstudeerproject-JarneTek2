@@ -187,7 +187,13 @@ export async function getFormWithItems(formId: string) {
     });
     if (!clubUser) return null;
 
-    return form;
+    return {
+        ...form,
+        items: form.items.map((item) => ({
+            ...item,
+            customPrice: item.customPrice ? Number(item.customPrice) : null,
+        })),
+    };
 }
 
 export async function createProductForForm(formId: string, formData: FormData) {
@@ -422,8 +428,17 @@ export async function getFormItemsForMember(memberId: string) {
                 },
             },
         },
-    })
-    return form;
+    });
+
+    if (!form) return null;
+
+    return {
+        ...form,
+        items: form.items.map((item) => ({
+            ...item,
+            customPrice: item.customPrice ? Number(item.customPrice) : null,
+        })),
+    };
 }
 
 

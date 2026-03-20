@@ -97,7 +97,7 @@ export default async function DashboardPage() {
                     {stats.fittingDay.isUpcoming ? "Upcoming" : "Last fitting day"}
                   </p>
                   <p className={`text-sm mt-1 ${stats.fittingDay.isUpcoming ? "text-green-700" : "text-gray-500"}`}>
-                    {new Date(stats.fittingDay.date).toLocaleDateString("nl-BE", {
+                    {new Date(stats.fittingDay.date).toLocaleDateString("en-GB", {
                       weekday: "long", day: "numeric", month: "long",
                     })}
                   </p>

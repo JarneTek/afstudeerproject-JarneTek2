@@ -44,8 +44,8 @@ export default function OrderSummaryView({
   function printPDF() {
     const selectedDay = fittingdays.find((d) => d.id === activeFittingDay);
     const title = selectedDay
-      ? `Bestellingen – ${new Date(selectedDay.date).toLocaleDateString("nl-BE")}${selectedDay.location ? " – " + selectedDay.location : ""}`
-      : "Bestellingen – Alle pasdagen";
+      ? `Orders – ${new Date(selectedDay.date).toLocaleDateString("en-GB")}${selectedDay.location ? " – " + selectedDay.location : ""}`
+      : "Orders – All fitting days";
     printOrderPDF({ title, summaryItems });
   }
   const [currentPage, setCurrentPage] = useState(1);

@@ -7,7 +7,7 @@ export default function MembersCsvUpload({ onSuccess }: { onSuccess?: () => void
     <div className="w-full">
       <div className="mb-6 text-left">
         <p className="text-sm text-gray-500 mb-2">
-          Je CSV-bestand moet de volgende kolomtitels bevatten (exacte namen):
+          Your CSV file must contain the following column headers (exact names):
         </p>
         <div className="bg-gray-50 rounded-xl px-4 py-3 mb-4 border border-gray-100 font-mono text-xs text-brand-navy break-all">
           firstName, lastName, email, group, hasPaid
@@ -17,8 +17,8 @@ export default function MembersCsvUpload({ onSuccess }: { onSuccess?: () => void
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <p>
-            De kolom <strong>hasPaid</strong> accepteert: yes, no, true, false, ja, 1, of 0. 
-            Je kan een <a href="data:text/csv;charset=utf-8,firstName,lastName,email,group,hasPaid%0A" download="template.csv" className="text-brand-green font-semibold hover:underline">voorbeeld CSV downloaden</a> om direct te starten.
+            The <strong>hasPaid</strong> column accepts: yes, no, true, false, ja, 1, or 0. 
+            You can <a href="data:text/csv;charset=utf-8,firstName,lastName,email,group,hasPaid%0A" download="template.csv" className="text-brand-green font-semibold hover:underline">download an example CSV</a> to start immediately.
           </p>
         </div>
       </div>

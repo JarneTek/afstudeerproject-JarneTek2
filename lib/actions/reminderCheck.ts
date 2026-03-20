@@ -36,6 +36,10 @@ export async function reminderCheck() {
                     in: fittingDay.targetGroups,
                 },
             },
+            orderBy: [
+                { createdAt: 'asc' },
+                { id: 'asc' }
+            ],
         });
 
         for (const member of members) {

@@ -27,6 +27,10 @@ export async function getFormsByClubId(clubId: string) {
         where: {
             clubId,
         },
+        orderBy: [
+            { createdAt: 'asc' },
+            { id: 'asc' }
+        ],
     });
 }
 
@@ -169,6 +173,10 @@ export async function getFormWithItems(formId: string) {
         where: { id: formId },
         include: {
             items: {
+                orderBy: [
+                    { createdAt: 'asc' },
+                    { id: 'asc' }
+                ],
                 include: {
                     product: true,
                 },
@@ -423,6 +431,10 @@ export async function getFormItemsForMember(memberId: string) {
         },
         include: {
             items: {
+                orderBy: [
+                    { createdAt: 'asc' },
+                    { id: 'asc' }
+                ],
                 include: {
                     product: true,
                 },

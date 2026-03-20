@@ -20,7 +20,10 @@ export async function getDashboardStats(clubId: string) {
   const orders = await prisma.order.findMany({
     where: { member: { clubId } },
     include: { member: true, items: true },
-    orderBy: { createdAt: "desc" },
+    orderBy: [
+      { createdAt: "desc" },
+      { id: "desc" }
+    ],
     take: 5,
   });
 

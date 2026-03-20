@@ -40,7 +40,7 @@ export default function AddArticleModal({ formId }: Props) {
     formData.set("sizes", selectedSizes.join(","));
     const result = await createProductForForm(formId, formData);
     if (result && "error" in result) {
-      setError(result.error);
+      setError(result.error ?? "An unknown error occurred.");
       return;
     }
     setIsModalOpen(false);
@@ -225,14 +225,14 @@ export default function AddArticleModal({ formId }: Props) {
                     onClick={() => setSelectedSizes(ADULT_SIZES)}
                     className="text-xs px-3 py-1 rounded-full border border-brand-navy text-brand-navy hover:bg-brand-navy hover:text-white transition-colors"
                   >
-                    Volwassenen
+                    Adults
                   </button>
                   <button
                     type="button"
                     onClick={() => setSelectedSizes(KIDS_SIZES)}
                     className="text-xs px-3 py-1 rounded-full border border-brand-navy text-brand-navy hover:bg-brand-navy hover:text-white transition-colors"
                   >
-                    Kinderen
+                    Kids
                   </button>
                   <button
                     type="button"
@@ -241,14 +241,14 @@ export default function AddArticleModal({ formId }: Props) {
                     }
                     className="text-xs px-3 py-1 rounded-full border border-gray-300 text-gray-500 hover:bg-gray-100 transition-colors"
                   >
-                    Alles
+                    All
                   </button>
                   <button
                     type="button"
                     onClick={() => setSelectedSizes([])}
                     className="text-xs px-3 py-1 rounded-full border border-gray-300 text-gray-500 hover:bg-gray-100 transition-colors"
                   >
-                    Wissen
+                    Clear
                   </button>
                 </div>
                 <div className="flex flex-wrap gap-2">

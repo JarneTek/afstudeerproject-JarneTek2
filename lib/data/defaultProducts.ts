@@ -1,5 +1,3 @@
-
-
 export const defaultProductsData = [
   {
     name: "Match Shirt",

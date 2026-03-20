@@ -13,7 +13,7 @@ export async function registerUser(email: string, password: string, clubName: st
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create user, then club, then link them via ClubUser
+
     const user = await prisma.user.create({
         data: { email, password: hashedPassword },
     });
@@ -61,7 +61,7 @@ export async function getSession() {
 
     try {
         const payload = jwt.verify(token, JWT_SECRET) as { id: string };
-        return payload; // { id: userId }
+        return payload; 
     } catch {
         return null;
     }

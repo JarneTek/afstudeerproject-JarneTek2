@@ -12,7 +12,7 @@ export default function DashboardHeader() {
           <span className="text-gray-900 font-medium">{pathname}</span>
         </div>
         <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-500">
-          🔔
+          
         </div>
       </header>
     )

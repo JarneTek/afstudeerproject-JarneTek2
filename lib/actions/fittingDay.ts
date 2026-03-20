@@ -38,6 +38,9 @@ export async function startFittingDay(clubId: string, formId: string, formData: 
                 in: form.targetGroups,
             },
         },
+        orderBy: {
+            id: 'asc',
+        },
     });
 
     if (members.length === 0) {

@@ -10,10 +10,7 @@ type FormCardProps = {
   allGroups: string[];
 };
 
-export default function FormCard({
-  form,
-  allGroups,
-}: FormCardProps) {
+export default function FormCard({ form, allGroups }: FormCardProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [selectedGroups, setSelectedGroups] = useState<string[]>(
     form.targetGroups,

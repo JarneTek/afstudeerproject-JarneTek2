@@ -5,6 +5,7 @@ import {getSession} from "../auth";
 import {createFormSchema, addArticleToFormSchema} from "../validations/forms";
 import {revalidatePath} from "next/cache";
 import { defaultProductsData } from "../data/defaultProducts";
+import type { FormWithItems } from "@/types/forms";
 
 export async function getFormsByClubId(clubId: string) {
     const session = await getSession();
@@ -26,6 +27,9 @@ export async function getFormsByClubId(clubId: string) {
     return prisma.form.findMany({
         where: {
             clubId,
+        },
+        orderBy: {
+            id: 'asc',
         },
     });
 }
@@ -160,7 +164,7 @@ export async function updateForm(formId: string, formData: FormData) {
     return {success: "Form updated successfully", updatedForm};
 }
 
-export async function getFormWithItems(formId: string) {
+export async function getFormWithItems(formId: string): Promise<FormWithItems | null> {
     const session = await getSession();
     const userId = session?.id;
     if (!userId) return null;
@@ -169,6 +173,7 @@ export async function getFormWithItems(formId: string) {
         where: { id: formId },
         include: {
             items: {
+                orderBy: { id: 'asc' },
                 include: {
                     product: true,
                 },
@@ -187,7 +192,15 @@ export async function getFormWithItems(formId: string) {
     });
     if (!clubUser) return null;
 
-    return form;
+    const formWithNumberPrices: FormWithItems = {
+        ...form,
+        items: form.items.map((item) => ({
+            ...item,
+            customPrice: item.customPrice ? Number(item.customPrice) : null,
+        })),
+    };
+
+    return formWithNumberPrices;
 }
 
 export async function createProductForForm(formId: string, formData: FormData) {
@@ -249,7 +262,10 @@ export async function createProductForForm(formId: string, formData: FormData) {
         },
     });
     revalidatePath(`/dashboard/form-builder/${formId}`);
-    return formItem;
+    return {
+        ...formItem,
+        customPrice: formItem.customPrice ? Number(formItem.customPrice) : null,
+    };
 }
 
 export async function updateFormItem(formItemId: string, formData: FormData) {
@@ -313,7 +329,10 @@ await prisma.product.update({
         },
     });
     revalidatePath(`/dashboard/form-builder/${formItem.formId}`);
-    return updatedFormItem;
+    return {
+        ...updatedFormItem,
+        customPrice: updatedFormItem.customPrice ? Number(updatedFormItem.customPrice) : null,
+    };
 }
 
 export async function deleteForm(formId: string) {
@@ -417,13 +436,23 @@ export async function getFormItemsForMember(memberId: string) {
         },
         include: {
             items: {
+                orderBy: { id: 'asc' },
                 include: {
                     product: true,
                 },
             },
         },
-    })
-    return form;
+    });
+
+    if (!form) return null;
+
+    return {
+        ...form,
+        items: form.items.map((item) => ({
+            ...item,
+            customPrice: item.customPrice ? Number(item.customPrice) : null,
+        })),
+    };
 }
 
 

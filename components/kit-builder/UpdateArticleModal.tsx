@@ -2,22 +2,19 @@
 
 import { useState } from "react";
 import { updateFormItem } from "@/lib/actions/forms";
-import { FormItem, Product } from "@prisma/client";
 import { uploadImage } from "@/lib/actions/upload";
 import LoadingButton from "@/components/ui/LoadingButton";
+import type { FormItemWithProduct } from "@/types/forms";
 
 const ADULT_SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
 const KIDS_SIZES = ["104", "116", "128", "140", "152", "164"];
 
 type Props = {
   formItemId: string;
-  item: FormItem & { product: Product };
+  item: FormItemWithProduct;
 };
 
-export default function UpdateArticleModal({
-  formItemId,
-  item
-}: Props) {
+export default function UpdateArticleModal({ formItemId, item }: Props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedSizes, setSelectedSizes] = useState<string[]>(
@@ -51,15 +48,11 @@ export default function UpdateArticleModal({
     formData.set("sizes", selectedSizes.join(","));
     const result = await updateFormItem(formItemId, formData);
     if (result && "error" in result) {
-      setError(result.error);
+      setError(result.error ?? "An unknown error occurred.");
       return;
     }
     setIsModalOpen(false);
     setError(null);
-    setSelectedSizes(ADULT_SIZES);
-    setArticleType("BASIC");
-    setImagePreview(null);
-    setProductName(item.product.name);
   };
 
   return (
@@ -242,14 +235,14 @@ export default function UpdateArticleModal({
                     onClick={() => setSelectedSizes(ADULT_SIZES)}
                     className="text-xs px-3 py-1 rounded-full border border-brand-navy text-brand-navy hover:bg-brand-navy hover:text-white transition-colors"
                   >
-                    Volwassenen
+                    Adults
                   </button>
                   <button
                     type="button"
                     onClick={() => setSelectedSizes(KIDS_SIZES)}
                     className="text-xs px-3 py-1 rounded-full border border-brand-navy text-brand-navy hover:bg-brand-navy hover:text-white transition-colors"
                   >
-                    Kinderen
+                    Kids
                   </button>
                   <button
                     type="button"
@@ -258,14 +251,14 @@ export default function UpdateArticleModal({
                     }
                     className="text-xs px-3 py-1 rounded-full border border-gray-300 text-gray-500 hover:bg-gray-100 transition-colors"
                   >
-                    Alles
+                    All
                   </button>
                   <button
                     type="button"
                     onClick={() => setSelectedSizes([])}
                     className="text-xs px-3 py-1 rounded-full border border-gray-300 text-gray-500 hover:bg-gray-100 transition-colors"
                   >
-                    Wissen
+                    Clear
                   </button>
                 </div>
                 <div className="flex flex-wrap gap-2">

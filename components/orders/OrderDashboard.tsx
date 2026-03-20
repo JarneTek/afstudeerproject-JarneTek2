@@ -86,7 +86,7 @@ export default function OrderDashboard({
               <option value="">All Fitting Days</option>
               {fittingdays.map((day) => (
                 <option key={day.id} value={day.id}>
-                  {new Date(day.date).toLocaleDateString("nl-BE")} - {day.location}
+                  {new Date(day.date).toLocaleDateString("en-GB")} - {day.location}
                 </option>
               ))}
             </select>

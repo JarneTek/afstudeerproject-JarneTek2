@@ -25,6 +25,9 @@ export async function getClubMembers(clubId: string) {
         where: {
             clubId: clubId,
         },
+        orderBy: {
+            id: 'asc',
+        },
     });
     revalidatePath(`/dashboard/form-builder`);
     return members;
@@ -119,12 +122,20 @@ export async function getMemberFormItemsFromToken(token: string) {
         },
         include: {
             items: {
+                orderBy: { id: 'asc' },
                 include: { product: true },
             },
         },
     });
+    if (!form) return null;
 
-    return form;
+    return {
+        ...form,
+        items: form.items.map((item) => ({
+            ...item,
+            customPrice: item.customPrice ? Number(item.customPrice) : null,
+        })),
+    };
 }
 
 export async function updateMember(memberId: string, data: {
@@ -216,4 +227,73 @@ export async function deleteMember(memberId: string) {
         },
     });
     revalidatePath(`/dashboard/members`);
+}
+
+export async function addMember(clubId: string, data: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    group: string;
+}) {
+    const session = await getSession();
+    if (!session) {
+        return { error: "No session found" };
+    }
+    const validatedData = updateMemberSchema.safeParse(data);
+    if (!validatedData.success) {
+        return { error: validatedData.error.issues[0].message };
+    }
+
+    const clubUser = await prisma.clubUser.findUnique({
+        where: {
+            userId_clubId: {
+                userId: session.id,
+                clubId: clubId,
+            },
+        },
+    });
+    if (!clubUser) {
+        return { error: "Not authorized" };
+    }
+
+    const newMember = await prisma.member.create({
+        data: {
+            firstName: validatedData.data.firstName,
+            lastName: validatedData.data.lastName,
+            email: validatedData.data.email,
+            group: validatedData.data.group,
+            clubId: clubId,
+        },
+    });
+
+    revalidatePath(`/dashboard/members`);
+    return { success: true, member: newMember };
+}
+
+export async function getClubGroups(clubId: string) {
+    const session = await getSession();
+    if (!session) {
+        return [];
+    }
+    const clubUser = await prisma.clubUser.findUnique({
+        where: {
+            userId_clubId: {
+                userId: session.id,
+                clubId: clubId,
+            },
+        },
+    });
+    if (!clubUser) {
+        throw new Error("Not authorized");
+    }
+    const groups = await prisma.member.findMany({
+        where: {
+            clubId: clubId,
+        },
+        select: {
+            group: true,
+        },
+        distinct: ['group'],
+    });
+    return groups.map((g) => g.group).filter(Boolean).sort();
 }

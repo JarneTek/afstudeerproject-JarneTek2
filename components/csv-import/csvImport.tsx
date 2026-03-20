@@ -81,7 +81,7 @@ export default function CsvImport({ onSuccess }: { onSuccess?: () => void }) {
             </button>
           </div>
           <h3 className="text-lg font-semibold mb-2">
-            Preview (Eerste 5 rijen)
+            Preview (First 5 rows)
           </h3>
           <div className="overflow-x-auto">
             <table className="w-full mt-4 text-left border-collapse">

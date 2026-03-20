@@ -63,6 +63,9 @@ model Product {
   clubId      String
   club        Club     @relation(fields: [clubId], references: [id], onDelete: Cascade)
   
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime? @updatedAt
+
   includedInForms FormItem[]
   orderedItems    OrderItem[]
 }
@@ -75,6 +78,9 @@ model Form {
 
   clubId      String
   club        Club     @relation(fields: [clubId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime? @updatedAt
 
   items       FormItem[]
 }
@@ -92,6 +98,9 @@ model FormItem {
   productId String
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+
   @@unique([formId, productId])
 }
 
@@ -105,11 +114,14 @@ model Member {
   hasPaid       Boolean     @default(false)
   
   clubId        String
-  club          Club        @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  club          Club         @relation(fields: [clubId], references: [id], onDelete: Cascade)
   orders        Order[]
 
   fittingDayId  String?
   fittingDay    FittingDay?  @relation(fields: [fittingDayId], references: [id])
+
+  createdAt     DateTime?     @default(now())
+  updatedAt     DateTime?     @updatedAt
 }
 
 model FittingDay {

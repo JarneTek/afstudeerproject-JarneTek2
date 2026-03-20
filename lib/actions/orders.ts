@@ -35,8 +35,8 @@ export async function getClubOrders(clubId: string, fittingDayId?: string) {
             },
         },
         orderBy: {
-            createdAt: 'desc'
-        }
+            id: 'desc',
+        },
     });
 
     return orders.map((order) => ({

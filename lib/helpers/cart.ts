@@ -13,12 +13,14 @@ type FormWithItems = {
     }[];
 };
 
-type CartItem = {
+export type CartItem = {
     id: string;
     formItemId: string;
-    quantity: number;
+    productName: string;
     type: string;
     price: number;
+    size: string;
+    quantity: number;
 };
 
 export function calculateCartTotal(cart: CartItem[], form: FormWithItems): number {

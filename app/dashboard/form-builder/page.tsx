@@ -2,7 +2,10 @@ import { getFormsByClubId } from "@/lib/actions/forms";
 import { getClubMembers } from "@/lib/actions/members";
 import FormCard from "@/components/kit-builder/FormCard";
 import NoMembersState from "@/components/dashboard/NoMembersState";
-import { getActiveClubCookie, getSelectedClub } from "@/lib/actions/active-club";
+import {
+  getActiveClubCookie,
+  getSelectedClub,
+} from "@/lib/actions/active-club";
 import CreateKitForm from "@/components/kit-builder/CreateKitForm";
 
 export default async function FormBuilderPage() {
@@ -29,7 +32,7 @@ export default async function FormBuilderPage() {
       if (bIsU) return 1;
       return a.localeCompare(b);
     },
-  ); //hier mss ook nog een server action van maken
+  ); //hier mss een server action voor maken
 
   if (!members) {
     return (
@@ -40,11 +43,7 @@ export default async function FormBuilderPage() {
   }
 
   if (members.length === 0) {
-    return (
-      <NoMembersState
-        clubName={selectedClub?.name}
-      />
-    );
+    return <NoMembersState clubName={selectedClub?.name} />;
   }
 
   return (
@@ -82,11 +81,7 @@ export default async function FormBuilderPage() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {forms.map((form) => (
-                <FormCard
-                  key={form.id}
-                  form={form}
-                  allGroups={uniqueGroups}
-                />
+                <FormCard key={form.id} form={form} allGroups={uniqueGroups} />
               ))}
             </div>
           )}

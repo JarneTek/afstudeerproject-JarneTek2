@@ -35,8 +35,13 @@ export default function DeleteMember({
       {isOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-md">
-            <h2 className="text-xl font-semibold text-brand-navy mb-2">Delete Member</h2>
-            <p className="text-sm text-gray-600 mb-4">Are you sure you want to delete this member? This action cannot be undone.</p>
+            <h2 className="text-xl font-semibold text-brand-navy mb-2">
+              Delete Member
+            </h2>
+            <p className="text-sm text-gray-600 mb-4">
+              Are you sure you want to delete this member? This action cannot be
+              undone.
+            </p>
             {error && <p className="text-sm text-red-600 mb-4">{error}</p>}
 
             <div className="flex gap-3">

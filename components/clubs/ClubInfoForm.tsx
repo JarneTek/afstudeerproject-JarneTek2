@@ -4,6 +4,7 @@ import { updateClub } from "@/lib/actions/clubs";
 import { useState } from "react";
 import { Club } from "@prisma/client";
 import { useClub } from "@/providers/clubprovider";
+import LoadingButton from "../ui/LoadingButton";
 
 export default function ClubInfoForm({ club }: { club: Club }) {
   const { refreshClubs } = useClub();
@@ -58,6 +59,23 @@ export default function ClubInfoForm({ club }: { club: Club }) {
 
         <div className="space-y-1">
           <label className="text-sm font-medium text-brand-navy">
+            Club Logo (Optional)
+          </label>
+          {club.logoUrl && (
+            <div className="mb-2">
+              <img src={club.logoUrl} alt="Club Logo" className="w-16 h-16 object-contain rounded-lg border border-gray-200 bg-gray-50 p-1" />
+            </div>
+          )}
+          <input
+            type="file"
+            name="file"
+            accept="image/*"
+            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-brand-green"
+          />
+        </div>
+
+        <div className="space-y-1">
+          <label className="text-sm font-medium text-brand-navy">
             Primary Color
           </label>
           <div className="flex items-center gap-3">
@@ -105,12 +123,13 @@ export default function ClubInfoForm({ club }: { club: Club }) {
           />
         </div>
 
-        <button
+        <LoadingButton
           type="submit"
+          loadingText="Saving..."
           className="bg-brand-navy text-white px-6 py-2 rounded-lg text-sm hover:bg-brand-green transition-colors"
         >
           Save Changes
-        </button>
+        </LoadingButton>
       </form>
     </div>
   );

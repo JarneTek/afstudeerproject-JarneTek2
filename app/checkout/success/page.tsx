@@ -2,7 +2,7 @@ import { prisma } from "@/lib/db";
 import { createQrCode } from "@/lib/helpers/cart";
 import { Decimal } from "@prisma/client/runtime/library";
 import { QRCodeSVG } from "qrcode.react";
-import CopyIbanButton from "@/components/checkout/CopyIbanButton";
+import ClipboardCopyButton from "@/components/checkout/ClipboardCopyButton";
 
 export default async function CheckoutSuccessPage({searchParams}: {searchParams: {token?: string, orderId?: string}}) {
 
@@ -46,7 +46,7 @@ export default async function CheckoutSuccessPage({searchParams}: {searchParams:
   const iban = order.member.club.iban;
   const memberName = `${order.member.firstName} ${order.member.lastName}`.trim();
   const totalAmount = order.totalPrice as Decimal;
-  const reference = `member: ${memberName} | order: ${orderId}`;
+  const reference = memberName;
   const formattedTotal = Number(order.totalPrice).toFixed(2);
 
   const qrCode = iban ? createQrCode(clubName, iban, totalAmount, reference) : null;
@@ -79,25 +79,44 @@ export default async function CheckoutSuccessPage({searchParams}: {searchParams:
                 <QRCodeSVG value={qrCode} size={240} includeMargin />
               </div>
             </div>
-            <div className="mt-4 pt-4 border-t border-gray-100">
-              <p className="text-sm font-medium text-brand-navy mb-3">
-                On mobile? Pay directly from your banking app:
-              </p>
-              <div className="flex flex-col gap-2 items-center">
-                <a
-                  href={`payto://iban/${iban!.replace(/\s/g, "")}?amount=EUR:${formattedTotal}&message=${encodeURIComponent(reference)}`}
-                  className="inline-block bg-brand-navy text-white text-sm font-bold px-6 py-3 rounded-xl hover:bg-brand-navy/90 transition-all shadow-md"
-                >
-                  💳 Open banking app to pay EUR {formattedTotal}
-                </a>
-                <CopyIbanButton iban={iban!} amount={formattedTotal} reference={reference} clubName={clubName} />
+            <div className="mt-6 pt-6 border-t border-gray-100 text-left">
+              <h3 className="font-bold text-brand-navy text-lg mb-4 text-center">
+                Manual Bank Transfer
+              </h3>
+              
+              <div className="bg-gray-50 rounded-xl p-5 space-y-4 border border-gray-200">
+                <div>
+                  <p className="text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Amount to pay</p>
+                  <p className="text-xl font-bold text-gray-900">EUR {formattedTotal}</p>
+                </div>
+
+                <div>
+                  <p className="text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">To Account (IBAN)</p>
+                  <p className="text-base font-medium text-gray-800 break-all">{iban}</p>
+                  <ClipboardCopyButton 
+                    textToCopy={iban!.replace(/\s/g, "")} 
+                    label="📋 Copy IBAN" 
+                    successLabel="✅ IBAN Copied!" 
+                  />
+                </div>
+
+                <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 mt-4">
+                  <p className="text-sm text-blue-800 font-medium mb-3">
+                    <span className="text-lg leading-none mr-2">⚠️</span>
+                    Include this exact reference in your payment description:
+                  </p>
+                  <p className="text-lg font-bold text-gray-900 bg-white px-3 py-2 rounded border border-blue-200 inline-block mb-1 break-all">
+                    {reference}
+                  </p>
+                  <div className="block">
+                    <ClipboardCopyButton 
+                      textToCopy={reference} 
+                      label="📋 Copy Reference" 
+                      successLabel="✅ Reference Copied!" 
+                    />
+                  </div>
+                </div>
               </div>
-            </div>
-            <div className="mt-6 space-y-1 text-sm text-gray-600">
-              <p>Club: {clubName}</p>
-              <p>Amount: EUR {formattedTotal}</p>
-              <p>IBAN: {iban}</p>
-              <p className="break-all">Reference: {reference}</p>
             </div>
           </>
         ) : (

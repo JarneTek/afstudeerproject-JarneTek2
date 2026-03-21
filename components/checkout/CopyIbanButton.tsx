@@ -2,13 +2,24 @@
 
 import { useState } from "react";
 
-export default function CopyIbanButton({ iban }: { iban: string }) {
+export default function CopyIbanButton({
+  iban,
+  amount,
+  reference,
+  clubName,
+}: {
+  iban: string;
+  amount: string;
+  reference: string;
+  clubName: string;
+}) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(iban.replace(/\s/g, ""));
+    const text = `IBAN: ${iban}\nAmount: EUR ${amount}\nTo: ${clubName}\nReference: ${reference}`;
+    await navigator.clipboard.writeText(text);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setTimeout(() => setCopied(false), 2500);
   };
 
   return (
@@ -16,7 +27,7 @@ export default function CopyIbanButton({ iban }: { iban: string }) {
       onClick={handleCopy}
       className="inline-flex items-center gap-2 bg-brand-navy text-white text-sm font-bold px-6 py-3 rounded-xl hover:bg-brand-navy/90 transition-all shadow-md"
     >
-      {copied ? "✅ IBAN Copied!" : "📋 Copy IBAN to pay via your banking app"}
+      {copied ? "✅ Payment details copied!" : "📋 Copy payment details"}
     </button>
   );
 }

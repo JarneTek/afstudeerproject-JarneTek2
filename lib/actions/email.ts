@@ -58,8 +58,15 @@ export async function sendReminderEmail(
   location: string | null,
   orderToken: string | null
 ) {
+  const envUrl = process.env.NEXT_PUBLIC_APP_URL;
+  const baseUrl = envUrl && envUrl !== "http://localhost:3000"
+    ? envUrl
+    : process.env.VERCEL_URL 
+        ? `https://${process.env.VERCEL_URL}` 
+        : "http://localhost:3000";
+
   const orderLink = orderToken
-    ? `${process.env.NEXT_PUBLIC_APP_URL}/order/${orderToken}`
+    ? `${baseUrl}/order/${orderToken}`
     : null;
 
   const { data, error } = await resend.emails.send({

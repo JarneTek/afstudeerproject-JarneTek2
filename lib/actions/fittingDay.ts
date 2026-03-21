@@ -66,7 +66,14 @@ export async function startFittingDay(clubId: string, formId: string, formData: 
             data: { orderToken: token, fittingDayId: fittingDay.id },
         });
 
-        const orderLink = `${process.env.NEXT_PUBLIC_APP_URL}/order/${token}`;
+        const envUrl = process.env.NEXT_PUBLIC_APP_URL;
+        const baseUrl = envUrl && envUrl !== "http://localhost:3000"
+            ? envUrl
+            : process.env.VERCEL_URL 
+                ? `https://${process.env.VERCEL_URL}` 
+                : "http://localhost:3000";
+
+        const orderLink = `${baseUrl}/order/${token}`;
         const formattedDate = fittingDay.date.toLocaleDateString('nl-BE', {
             weekday: 'long',
             day: 'numeric',

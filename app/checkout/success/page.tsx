@@ -79,11 +79,19 @@ export default async function CheckoutSuccessPage({searchParams}: {searchParams:
                 <QRCodeSVG value={qrCode} size={240} includeMargin />
               </div>
             </div>
-            <p className="text-xs text-gray-400 mt-3">
-              On mobile? Copy the IBAN and pay via your banking app.
-            </p>
-            <div className="mt-3">
-              <CopyIbanButton iban={iban!} />
+            <div className="mt-4 pt-4 border-t border-gray-100">
+              <p className="text-sm font-medium text-brand-navy mb-3">
+                On mobile? Pay directly from your banking app:
+              </p>
+              <div className="flex flex-col gap-2 items-center">
+                <a
+                  href={`payto://iban/${iban!.replace(/\s/g, "")}?amount=EUR:${formattedTotal}&message=${encodeURIComponent(reference)}`}
+                  className="inline-block bg-brand-navy text-white text-sm font-bold px-6 py-3 rounded-xl hover:bg-brand-navy/90 transition-all shadow-md"
+                >
+                  💳 Open banking app to pay EUR {formattedTotal}
+                </a>
+                <CopyIbanButton iban={iban!} amount={formattedTotal} reference={reference} clubName={clubName} />
+              </div>
             </div>
             <div className="mt-6 space-y-1 text-sm text-gray-600">
               <p>Club: {clubName}</p>

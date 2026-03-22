@@ -102,7 +102,7 @@ async function main() {
       data: {
         name: 'Standard Clothing Package',
         clubId: club.id,
-        targetGroups: ['Youth', 'Seniors'],
+        targetGroups: ['Youth U19', 'Seniors 1', 'Seniors 2'],
         isActive: true,
         items: {
           create: [
@@ -149,7 +149,7 @@ async function main() {
         startTime: '18:00',
         endTime: '21:00',
         location: 'Clubhouse Demo Club',
-        targetGroups: ['Seniors'],
+        targetGroups: ['Seniors 1', 'Seniors 2'],
         clubId: club.id,
       },
     });

@@ -47,6 +47,36 @@ export async function startFittingDay(clubId: string, formId: string, formData: 
         return { error: "No members found for the selected form" };
     }
 
+    const newDate = new Date(validated.data.date);
+    const startOfDay = new Date(newDate);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(newDate);
+    endOfDay.setHours(23, 59, 59, 999);
+
+    const existingDays = await prisma.fittingDay.findMany({
+        where: {
+            clubId,
+            date: {
+                gte: startOfDay,
+                lte: endOfDay
+            }
+        }
+    });
+
+    const newStart = validated.data.startTime;
+    const newEnd = validated.data.endTime;
+
+    for (const day of existingDays) {
+        if (newStart < day.endTime && newEnd > day.startTime) {
+            const hasOverlappingGroup = form.targetGroups.some(group => 
+                day.targetGroups.includes(group)
+            );
+            if (hasOverlappingGroup) {
+                return { error: "There is already an overlapping fitting day scheduled for one or more of these target groups at this time." };
+            }
+        }
+    }
+
     const fittingDay = await prisma.fittingDay.create({
         data: {
             clubId,

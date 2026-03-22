@@ -8,9 +8,11 @@ export default function DashboardLayout({
 }) {
   return (
     <ClubProvider>
-      <div className="flex flex-col md:flex-row h-screen bg-gray-50">
+      <div className="flex flex-col md:flex-row h-[100dvh] bg-gray-50 overflow-hidden">
         <DashboardNav />
-        {children}
+        <main className="flex-1 overflow-y-auto relative">
+          {children}
+        </main>
       </div>
     </ClubProvider>
   );

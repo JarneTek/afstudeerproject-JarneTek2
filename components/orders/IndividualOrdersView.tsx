@@ -89,28 +89,30 @@ export default function IndividualOrdersView({
                   )}
                 </div>
               </div>
-              <table className="w-full text-sm text-gray-600">
-                <thead>
-                  <tr className="text-left text-gray-400 text-xs">
-                    <th className="py-1">Article</th>
-                    <th className="py-1">Size</th>
-                    <th className="py-1">Qty</th>
-                    <th className="py-1 text-right">Price</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {order.items.map((item) => (
-                    <tr key={item.id}>
-                      <td className="py-1">{item.product.name}</td>
-                      <td className="py-1">{item.size}</td>
-                      <td className="py-1">{item.quantity}x</td>
-                      <td className="py-1 text-right">
-                        {Number(item.price).toFixed(2)} EUR
-                      </td>
+              <div className="overflow-x-auto -mx-2 px-2 sm:mx-0 sm:px-0">
+                <table className="w-full text-sm text-gray-600 min-w-[350px]">
+                  <thead>
+                    <tr className="text-left text-gray-400 text-xs">
+                      <th className="py-2 whitespace-nowrap">Article</th>
+                      <th className="py-2 whitespace-nowrap">Size</th>
+                      <th className="py-2 whitespace-nowrap">Qty</th>
+                      <th className="py-2 text-right whitespace-nowrap">Price</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {order.items.map((item) => (
+                      <tr key={item.id} className="border-t border-gray-50">
+                        <td className="py-2.5 whitespace-nowrap">{item.product.name}</td>
+                        <td className="py-2.5 whitespace-nowrap">{item.size}</td>
+                        <td className="py-2.5 whitespace-nowrap">{item.quantity}x</td>
+                        <td className="py-2.5 text-right whitespace-nowrap">
+                          {Number(item.price).toFixed(2)} EUR
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
               <div className="text-right text-sm font-semibold text-brand-navy">
                 Total: {Number(order.totalPrice).toFixed(2)} EUR
               </div>

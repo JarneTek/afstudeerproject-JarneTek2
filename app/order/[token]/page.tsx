@@ -3,6 +3,7 @@ import { getMemberFormItemsFromToken } from "@/lib/actions/members";
 import { prisma } from "@/lib/db";
 import { notFound } from "next/navigation";
 import Image from "next/image";
+import MembershipFeeMessage from "@/components/orders/MembershipFeeMessage";
 
 export default async function OrderPage({
   params,
@@ -21,6 +22,10 @@ export default async function OrderPage({
 
   if (!member) {
     return notFound();
+  }
+
+  if (!member.hasPaid) {
+    return <MembershipFeeMessage />;
   }
 
   if (member.orders.length > 0) {

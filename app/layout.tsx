@@ -10,6 +10,9 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "KitStack",
   description: "Club kit management platform",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({

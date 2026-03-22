@@ -94,16 +94,17 @@ export default function MembersTable({
         </div>
       ) : (
         <div className="bg-white border border-gray-200 rounded-xl">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="bg-gray-50 border-b border-gray-200 text-left text-brand-navy [&>th:first-child]:rounded-tl-xl [&>th:last-child]:rounded-tr-xl">
-                <th className="px-4 py-3 font-semibold">Member Name</th>
-                <th className="px-4 py-3 font-semibold">Email</th>
-                <th className="px-4 py-3 font-semibold">U-Group</th>
-                <th className="px-4 py-3 font-semibold">Payment Status</th>
-                <th className="px-4 py-3 font-semibold text-right">Actions</th>
-              </tr>
-            </thead>
+          <div className="overflow-x-auto w-full">
+            <table className="w-full text-sm min-w-[800px]">
+              <thead>
+                <tr className="bg-gray-50 border-b border-gray-200 text-left text-brand-navy [&>th:first-child]:rounded-tl-xl [&>th:last-child]:rounded-tr-xl">
+                  <th className="px-4 py-3 font-semibold whitespace-nowrap">Member Name</th>
+                  <th className="px-4 py-3 font-semibold whitespace-nowrap">Email</th>
+                  <th className="px-4 py-3 font-semibold whitespace-nowrap">U-Group</th>
+                  <th className="px-4 py-3 font-semibold whitespace-nowrap">Payment Status</th>
+                  <th className="px-4 py-3 font-semibold text-right whitespace-nowrap">Actions</th>
+                </tr>
+              </thead>
             <tbody>
               {paginatedMembers.map((member) => (
                 <tr
@@ -191,7 +192,8 @@ export default function MembersTable({
                 </tr>
               ))}
             </tbody>
-          </table>
+            </table>
+          </div>
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}

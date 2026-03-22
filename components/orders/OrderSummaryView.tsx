@@ -86,33 +86,35 @@ export default function OrderSummaryView({
             </svg>
             Print / PDF
           </button>
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="bg-gray-50 border-b border-gray-200 text-left text-brand-navy">
-                <th className="px-4 py-3 font-semibold">Article</th>
-                <th className="px-4 py-3 font-semibold">Size</th>
-                <th className="px-4 py-3 font-semibold">Total Quantity</th>
-                <th className="px-4 py-3 font-semibold">Total Price</th>
-              </tr>
-            </thead>
-            <tbody>
-              {paginatedSummaryItems.map((item, i) => (
-                <tr
-                  key={i}
-                  className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
-                >
-                  <td className="px-4 py-3 font-medium text-brand-navy">
-                    {item.productName}
-                  </td>
-                  <td className="px-4 py-3 text-gray-500">{item.size}</td>
-                  <td className="px-4 py-3 text-gray-500">{item.quantity}x</td>
-                  <td className="px-4 py-3 text-gray-500">
-                    {item.totalPrice.toFixed(2)} EUR
-                  </td>
+          <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
+            <table className="w-full text-sm min-w-[500px]">
+              <thead>
+                <tr className="bg-gray-50 border-b border-gray-200 text-left text-brand-navy">
+                  <th className="px-4 py-3 font-semibold whitespace-nowrap">Article</th>
+                  <th className="px-4 py-3 font-semibold whitespace-nowrap">Size</th>
+                  <th className="px-4 py-3 font-semibold whitespace-nowrap">Total Quantity</th>
+                  <th className="px-4 py-3 font-semibold whitespace-nowrap">Total Price</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {paginatedSummaryItems.map((item, i) => (
+                  <tr
+                    key={i}
+                    className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
+                  >
+                    <td className="px-4 py-3 font-medium text-brand-navy whitespace-nowrap">
+                      {item.productName}
+                    </td>
+                    <td className="px-4 py-3 text-gray-500 whitespace-nowrap">{item.size}</td>
+                    <td className="px-4 py-3 text-gray-500 whitespace-nowrap">{item.quantity}x</td>
+                    <td className="px-4 py-3 text-gray-500 whitespace-nowrap">
+                      {item.totalPrice.toFixed(2)} EUR
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
           <Pagination
             currentPage={currentPage}
             totalPages={totalSummaryPages}
